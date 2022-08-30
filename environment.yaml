@@ -1,0 +1,17 @@
+name: orekit-application
+channels:
+  - conda-forge
+dependencies:
+  - orekit=11.2
+  - pip
+  - python=3.10.4
+  - pyyaml
+  - requests
+  - astropy
+  # dev dependencies
+  - pytest
+  - pytest-cov
+  - black
+  - flake8
+  - pip:
+    - git+https://github.com/greyskyy/orekit-factory.git

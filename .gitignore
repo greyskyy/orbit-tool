@@ -1,0 +1,7 @@
+.data
+.build
+
+*.html
+
+__pycache__
+**/__pycache__
