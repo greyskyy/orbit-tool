@@ -22,3 +22,18 @@ orbits:
     m: 257.7333 deg
 
 step: PT10M
+
+propagator_args:
+  mass: 200kg
+  positionTolerance: 10.0
+  considerGravity: true
+  gravityFieldDegree: 2
+  gravityFieldOrder: 2
+  considerSolarPressure: True
+  solarPressureCrossSection: "0.344 m^2"
+  solarCa: 0.2
+  solarCs: 0.8
+  considerAtmosphere: true
+  atmosphereCrossSection: 0.344 m^2
+  atmosphereDragCoeff: 2.2
+  bodies: ["sun", "moon", "jupiter"]

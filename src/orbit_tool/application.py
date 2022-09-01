@@ -1,13 +1,15 @@
 """Satellite analytics engine."""
 
 import argparse
-from inspect import getmembers, isfunction
+import importlib
+import pkgutil
+import inspect
 from os import path
+import sys
 import yaml
 import orekit
-import orbit_tool.apps as apps
 
-from .utils import configure_logging
+from .logging import configure_logging
 
 
 def parseArgs() -> tuple[argparse.Namespace, dict]:
@@ -18,48 +20,11 @@ def parseArgs() -> tuple[argparse.Namespace, dict]:
     """
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-o", "--output", help="Output html file.", type=str, default="index.html"
-    )
-    parser.add_argument(
         "-c",
         "--config",
         help="path to the configuration yaml file",
         type=str,
         default="config.yaml",
-    )
-
-    applist = [m[0] for m in getmembers(apps, isfunction)]
-    parser.add_argument(
-        "-t",
-        "--run-tool",
-        help=f"Run a specific tool (default={applist[0] if len(applist) > 0 else 'None'})",
-        metavar="tool",
-        choices=applist,
-        dest="tool",
-        default=applist[0] if len(applist) == 1 else None,
-    )
-    parser.add_argument(
-        "--test", help="Run in test-mode.", action="store_true", default=False
-    )
-
-    convert_group = parser.add_argument_group(
-        title="convert arguments",
-        description="Arguments for converting one orbit definition to another.",
-    )
-
-    convert_group.add_argument(
-        "--from",
-        type=str,
-        required=True,
-        dest="orbit",
-        help="Specify the orbit from the config file on which to operate.",
-    )
-    convert_group.add_argument(
-        "--to",
-        type=str,
-        choices=["tle", "keplerian"],
-        default="keplerian",
-        help="Specify the output orbit format.",
     )
 
     loglevel = parser.add_argument_group(
@@ -101,6 +66,37 @@ def parseArgs() -> tuple[argparse.Namespace, dict]:
         help="Display highly detailed level of logging.",
     )
 
+    subparsers = parser.add_subparsers(
+        title="Subcommands",
+        description="Valid subcommands.",
+        help="Specify {subcommand} --help for more details",
+    )
+
+    for module_loader, name, ispkg in pkgutil.iter_modules(
+        importlib.import_module("orbit_tool.apps").__path__, "orbit_tool.apps."
+    ):
+        app_module = importlib.import_module(name)
+        helpstr = ""
+        func = None
+        conf = None
+        command = name.replace("orbit_tool.apps.", "")
+
+        for n, value in inspect.getmembers(app_module):
+            if n == "__doc__":
+                helpstr = value
+            elif n == "SUBCOMMAND":
+                command = value
+            elif n == "config_args":
+                conf = value
+            elif n == "execute":
+                func = value
+
+        if func:
+            p = subparsers.add_parser(command, help=helpstr)
+            if conf:
+                conf(p)
+            p.set_defaults(func=func)
+
     args = parser.parse_args()
 
     if args.config and path.exists(args.config):
@@ -124,12 +120,13 @@ def runApp(vm=None):
     Returns:
         _type_: _description_
     """
+
     if vm is None:
         vm = orekit.initVM()
 
     import orekitfactory
     from orekitfactory.utils import Dataloader
-    
+
     Dataloader.data_dir = ".data"
 
     (args, config) = parseArgs()
@@ -142,8 +139,7 @@ def runApp(vm=None):
     else:
         orekitfactory.init_orekit()
 
-    for name, method in getmembers(apps, isfunction):
-        if name == args.tool:
-            return method(vm=vm, args=args, config=config)
-
-    raise ValueError(f"cannot run unknown tool: {args.tool}")
+    if "func" in args:
+        return args.func(vm=vm, args=args, config=config)
+    else:
+        print("No subcommand specified. Use --help for more info", file=sys.stderr)

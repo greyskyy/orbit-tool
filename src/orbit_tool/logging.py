@@ -21,7 +21,7 @@ def configure_logging(level: str = "INFO", root_level: str = "ERROR"):
                 "level": root_level.upper(),
                 "propagate": False,
             },
-            "app_name": {
+            "orbit_tool": {
                 "handlers": ["standard"],
                 "level": level.upper(),
                 "propagate": False,

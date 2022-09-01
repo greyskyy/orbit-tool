@@ -9,6 +9,7 @@ dependencies:
   - pyyaml
   - requests
   - astropy
+  - pandas
   # dev dependencies
   - pytest
   - pytest-cov
