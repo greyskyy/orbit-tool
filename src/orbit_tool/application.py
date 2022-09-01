@@ -5,7 +5,8 @@ from inspect import getmembers, isfunction
 from os import path
 import yaml
 import orekit
-import app_name.apps as apps
+import orbit_tool.apps as apps
+
 from .utils import configure_logging
 
 
@@ -39,6 +40,26 @@ def parseArgs() -> tuple[argparse.Namespace, dict]:
     )
     parser.add_argument(
         "--test", help="Run in test-mode.", action="store_true", default=False
+    )
+
+    convert_group = parser.add_argument_group(
+        title="convert arguments",
+        description="Arguments for converting one orbit definition to another.",
+    )
+
+    convert_group.add_argument(
+        "--from",
+        type=str,
+        required=True,
+        dest="orbit",
+        help="Specify the orbit from the config file on which to operate.",
+    )
+    convert_group.add_argument(
+        "--to",
+        type=str,
+        choices=["tle", "keplerian"],
+        default="keplerian",
+        help="Specify the output orbit format.",
     )
 
     loglevel = parser.add_argument_group(
@@ -80,11 +101,6 @@ def parseArgs() -> tuple[argparse.Namespace, dict]:
         help="Display highly detailed level of logging.",
     )
 
-    ##
-    # TODO: add more command line args here
-    #
-    ##
-
     args = parser.parse_args()
 
     if args.config and path.exists(args.config):
@@ -110,8 +126,11 @@ def runApp(vm=None):
     """
     if vm is None:
         vm = orekit.initVM()
-    
+
     import orekitfactory
+    from orekitfactory.utils import Dataloader
+    
+    Dataloader.data_dir = ".data"
 
     (args, config) = parseArgs()
 

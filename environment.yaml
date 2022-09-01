@@ -1,7 +1,8 @@
-name: orekit-application
+name: orbit-tool
 channels:
   - conda-forge
 dependencies:
+  - isodate
   - orekit=11.2
   - pip
   - python=3.10.4
