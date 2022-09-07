@@ -80,6 +80,7 @@ def parseArgs() -> tuple[argparse.Namespace, dict]:
         func = None
         conf = None
         command = name.replace("orbit_tool.apps.", "")
+        aliases = []
 
         for n, value in inspect.getmembers(app_module):
             if n == "__doc__":
@@ -90,9 +91,11 @@ def parseArgs() -> tuple[argparse.Namespace, dict]:
                 conf = value
             elif n == "execute":
                 func = value
+            elif n == "ALIASES":
+                aliases = value
 
         if func:
-            p = subparsers.add_parser(command, help=helpstr)
+            p = subparsers.add_parser(command, help=helpstr, aliases=aliases)
             if conf:
                 conf(p)
             p.set_defaults(func=func)
