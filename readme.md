@@ -1,43 +1,30 @@
-# Orekit application template
+# orbit tool
 
-This template provides the basic environment and framework for an orekit-based
-application written in python.
+Simple tool providing a series of helpful orbit-related functions.
 
-Simply click the green *"Use this template"* button to get started, then, follow
-these instructions:
+## Setup and installation
 
-1. Rename the `app_name` directory to your application name.
-2. Update `pyproject.toml` by:
-    1. Update the application name and description on lines 6 and 7.
-    2. Update the author(s) on line 9.
-    3. Update the app_name on line 31 to the new application directory value from step 1.
-3. Update `environment.yaml` by:
-    1. Updating the environment name on line 1.
-    2. Adding any additional dependencies you know at the start.
-4. Update `application.py` by:
-    1. Updating the import on line 9 with the application directory name from step 1.
-5. Update `src/__main__.py` by:
-    1. Updating the import on line 4 with the application directory name from step 1.
-6. Update `src/utils/logging.py` by:
-    1. Updating the logger on line 24, replacing *app_name_ with the application directory name fro step 1.
-7. Delete this list and update this `readme.md` with app-specific details.
+### Anaconda setup
 
-# App name
+If you already have an anaconda installation, skip this section. Otherwise, follow these steps to install `mamba`:
 
-## tl;dr
+1. Follow [these instructions](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) to install `conda`. Note for windows users, I recommend installing the linux version on wsl2.  However that's a personal preference.
+
+2. Follow [these instructions](https://mamba.readthedocs.io/en/latest/installation.html) to install `mamba`. Or, if you don't want to click the link, just run the following command:
+
+```bash
+conda install mamba -n base -c conda-forge
+```
+
+### Environment setup
 
 Build and activate the conda environment from the `environment.yaml`
 
 ```bash
 mamba env create -f environment.yaml
-mamba activate orekit-application
-python src/satscheduler
+mamba activate orbit-tool
+python src --help
+usage: src [-h] [-c CONFIG] [--quiet | --error | --warn | --info | --debug] {checktle,convert-orbit} ...
 ```
 
-## Developers
 
-Recreate the `environment.yaml` as follows:
-
-```bash
-mamba env export --from-history | grep -vi '^prefix:' > environment.yaml
-```

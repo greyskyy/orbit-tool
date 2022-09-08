@@ -2,18 +2,19 @@ name: orbit-tool
 channels:
   - conda-forge
 dependencies:
+  - astropy
   - isodate
+  - matplotlib
   - orekit=11.2
+  - pandas
   - pip
   - python=3.10.4
   - pyyaml
   - requests
-  - astropy
-  - pandas
   # dev dependencies
   - pytest
   - pytest-cov
   - black
   - flake8
   - pip:
-    - git+https://github.com/greyskyy/orekit-factory.git
+    - git+https://github.com/greyskyy/orekit-factory.git@v0.1.0
