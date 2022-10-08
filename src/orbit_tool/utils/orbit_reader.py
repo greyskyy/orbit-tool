@@ -30,6 +30,7 @@ class OrbitType(Enum):
         else:
             return False
 
+
 def read_orbit(
     orbit_name: str = None, config: dict = None, context: DataContext = None, **kwargs
 ) -> tuple[Orbit | TLE, OrbitType]:
@@ -45,10 +46,12 @@ def read_orbit(
     Returns:
         tuple[Orbit | TLE, OrbitType]: _description_
     """
-    
+
     circular_threshold = float(config.get("circular_threshold", 1.0e-3))
-    equatoral_threshold = validate_quantity(config.get("equatoral_threshold", 0.001), u.deg)
-    
+    equatoral_threshold = validate_quantity(
+        config.get("equatoral_threshold", 0.001), u.deg
+    )
+
     orbit_def = {}
     if orbit_name:
         orbit_def = config[orbit_name]
@@ -69,16 +72,14 @@ def read_orbit(
             OrbitType.TLE,
         )
     elif "a" in orbit_def:
-        orbit = orekitfactory.to_orbit(**orbit_def, context=context) 
+        orbit = orekitfactory.to_orbit(**orbit_def, context=context)
         circular = orbit.getE() < circular_threshold
         equatoral = orbit.getI() < float(equatoral_threshold.to_value(u.rad))
-        
+
         if circular and not equatoral:
-            return (CircularOrbit(orbit),
-                    OrbitType.CIRCULAR)
+            return (CircularOrbit(orbit), OrbitType.CIRCULAR)
         elif circular or equatoral:
-            return (EquinoctialOrbit(orbit),
-                    OrbitType.EQUINOCTIAL)
+            return (EquinoctialOrbit(orbit), OrbitType.EQUINOCTIAL)
         return (
             orbit,
             OrbitType.KEPLERIAN,

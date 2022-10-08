@@ -25,7 +25,7 @@ def start_stop_step(
     args: argparse.Namespace, config: dict, orbitdate: AbsoluteDate
 ) -> tuple[AbsoluteDate, AbsoluteDate, timedelta]:
     # compute propagation step
-    if args.step:
+    if "step" in args and args.step:
         step = to_timedelta(args.step)
     elif "step" in config:
         step = to_timedelta(config["step"])

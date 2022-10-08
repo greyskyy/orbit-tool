@@ -19,7 +19,7 @@ def orbit_to_dict(orbit: TLE | Orbit, dest_type: OrbitType, config: dict) -> dic
     if isinstance(orbit, TLE):
         return {"line1": orbit.getLine1(), "line2": orbit.getLine2()}
     elif isinstance(orbit, Orbit):
-        
+
         if dest_type is OrbitType.AUTO_SELECT:
             if isinstance(orbit, KeplerianOrbit):
                 dest_type = OrbitType.KEPLERIAN
@@ -30,18 +30,20 @@ def orbit_to_dict(orbit: TLE | Orbit, dest_type: OrbitType, config: dict) -> dic
             else:
                 orbit = KeplerianOrbit(orbit)
                 circular_threshold = float(config.get("circular_threshold", 1.0e-3))
-                equatoral_threshold = validate_quantity(config.get("equatoral_threshold", 0.001), u.deg)
-                
+                equatoral_threshold = validate_quantity(
+                    config.get("equatoral_threshold", 0.001), u.deg
+                )
+
                 circular = orbit.getE() < circular_threshold
                 equatoral = orbit.getI() < float(equatoral_threshold.to_value(u.rad))
-                
+
                 if circular and not equatoral:
                     dest_type = OrbitType.CIRCULAR
                 elif circular or equatoral:
                     dest_type = OrbitType.EQUINOCTIAL
                 else:
                     dest_type = OrbitType.KEPLERIAN
-        
+
         if dest_type is OrbitType.KEPLERIAN:
             orbit = KeplerianOrbit(orbit)
             return {
@@ -77,7 +79,7 @@ def orbit_to_dict(orbit: TLE | Orbit, dest_type: OrbitType, config: dict) -> dic
                 ).to_string(u.deg),
                 "alphaV": u.Quantity(
                     MathUtils.normalizeAngle(orbit.getAlphaV(), FastMath.PI), u.rad
-                ).to_string(u.deg)
+                ).to_string(u.deg),
             }
 
     raise ValueError(

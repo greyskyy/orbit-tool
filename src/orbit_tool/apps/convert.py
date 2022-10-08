@@ -20,7 +20,6 @@ from org.orekit.propagation.conversion import (
     PropagatorConverter,
     TLEPropagatorBuilder,
     NumericalPropagatorBuilder,
-    
     FiniteDifferencePropagatorConverter,
 )
 from org.orekit.time import AbsoluteDate
@@ -113,7 +112,7 @@ def execute(vm=None, args=None, config=None) -> int:
     # load source orbit, type, and destination type
     orbit, type = utils.read_orbit(orbit_name=args.orbit, config=config["orbits"])
     dest_type = utils.OrbitType[args.to.upper()]
-  
+
     logger.info("Converting source type=%s to dest_type=%s", type, dest_type)
 
     if type == dest_type:
@@ -162,8 +161,10 @@ def execute(vm=None, args=None, config=None) -> int:
     else:
         seed_orbit = SpacecraftState.cast_(states.get(0)).getOrbit()
         dormandBuilder = DormandPrince853IntegratorBuilder(1.0e-3, 600.0, 1.0e-3)
-        #builder = KeplerianPropagatorBuilder(seed_orbit, PositionAngle.TRUE, 1.0)
-        builder = NumericalPropagatorBuilder(seed_orbit, dormandBuilder, PositionAngle.TRUE, 1.0)
+        # builder = KeplerianPropagatorBuilder(seed_orbit, PositionAngle.TRUE, 1.0)
+        builder = NumericalPropagatorBuilder(
+            seed_orbit, dormandBuilder, PositionAngle.TRUE, 1.0
+        )
         converter = FiniteDifferencePropagatorConverter(builder, 1e-3, 1000)
 
         converter.convert(states, False, "central attraction coefficient")
@@ -173,7 +174,7 @@ def execute(vm=None, args=None, config=None) -> int:
         state = new_prop.propagate(start_date)
 
         new_orbit = state.getOrbit()
-    
+
     print("")
     print("Generated Orbit:")
     print("")
@@ -182,4 +183,3 @@ def execute(vm=None, args=None, config=None) -> int:
 
     logger.info("completed.")
     return 0
-
