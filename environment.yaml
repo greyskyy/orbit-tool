@@ -9,7 +9,7 @@ dependencies:
   - orekit=11.2
   - pandas
   - pip
-  - python=3.10.4
+  - python>=3.10.4
   - pyyaml
   - requests
   - geopy=2.0.0
@@ -19,5 +19,5 @@ dependencies:
   - black
   - flake8
   - pip:
-    - git+https://github.com/greyskyy/orekit-factory.git@v0.1.0
-    - cesiumpy
+    - py-rebar
+    - orekit-factory

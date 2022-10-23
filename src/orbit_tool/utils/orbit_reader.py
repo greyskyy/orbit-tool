@@ -7,6 +7,7 @@ from org.orekit.propagation.analytical.tle import TLE
 import astropy.units as u
 import logging
 import orekitfactory
+import orekitfactory.factory
 import requests
 
 from orekitfactory.utils import validate_quantity
@@ -66,13 +67,13 @@ def read_orbit(
         )
     elif "line1" in orbit_def:
         return (
-            orekitfactory.to_tle(
+            orekitfactory.factory.to_tle(
                 orbit_def["line1"], orbit_def["line2"], context=context
             ),
             OrbitType.TLE,
         )
     elif "a" in orbit_def:
-        orbit = orekitfactory.to_orbit(**orbit_def, context=context)
+        orbit = orekitfactory.factory.to_orbit(**orbit_def, context=context)
         circular = orbit.getE() < circular_threshold
         equatoral = orbit.getI() < float(equatoral_threshold.to_value(u.rad))
 

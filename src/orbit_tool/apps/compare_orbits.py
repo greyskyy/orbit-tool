@@ -2,7 +2,7 @@
 from datetime import timedelta
 import argparse
 import logging
-import orekitfactory
+import orekitfactory.factory
 import astropy.units as u
 import matplotlib.pyplot as plt
 import orbit_tool.utils as utils
@@ -11,8 +11,10 @@ from org.orekit.data import DataContext
 from org.orekit.orbits import OrbitType
 
 from .checktle import compare_propagators
+from ..configuration import get_config
 
 ALIASES = ["compare", "comp", "cmp"]
+LOGGER_NAME = "orbit_tool"
 
 
 def config_args(parser):
@@ -93,14 +95,15 @@ def config_args(parser):
     )
 
 
-def execute(vm=None, args=None, config=None) -> int:
+def execute(args=None) -> int:
     """Compare propagation of a tle against a high-fidelity propagator."""
 
     logger = logging.getLogger(__name__)
     context = DataContext.getDefault()
-
+    config = get_config()
+    
     # load a consistent earth model
-    earth = orekitfactory.get_reference_ellipsoid(
+    earth = orekitfactory.factory.get_reference_ellipsoid(
         model="wgs84", frame="itrf", iersConventions="2010", simpleEop=False
     )
 
@@ -118,14 +121,14 @@ def execute(vm=None, args=None, config=None) -> int:
     logger.debug("Exection start time set to %s", str(start_date))
 
     # build the propagators
-    propagator1 = orekitfactory.to_propagator(
+    propagator1 = orekitfactory.factory.to_propagator(
         orbit1,
         centralBody=earth,
         context=context,
         orbitType=OrbitType.CARTESIAN,
         **config["propagator_args"],
     )
-    propagator2 = orekitfactory.to_propagator(
+    propagator2 = orekitfactory.factory.to_propagator(
         orbit2,
         centralBody=earth,
         context=context,

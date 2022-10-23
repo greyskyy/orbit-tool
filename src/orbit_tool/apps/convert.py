@@ -5,7 +5,7 @@ import json
 
 import orbit_tool.utils as utils
 
-import orekitfactory
+import orekitfactory.factory
 
 from java.util import ArrayList
 from org.orekit.data import DataContext
@@ -15,9 +15,6 @@ from org.orekit.propagation import SpacecraftState, Propagator
 from org.orekit.propagation.analytical.tle import TLEPropagator, TLE
 from org.orekit.propagation.conversion import (
     DormandPrince853IntegratorBuilder,
-    KeplerianPropagatorBuilder,
-    PropagatorBuilder,
-    PropagatorConverter,
     TLEPropagatorBuilder,
     NumericalPropagatorBuilder,
     FiniteDifferencePropagatorConverter,
@@ -26,6 +23,7 @@ from org.orekit.time import AbsoluteDate
 
 SUBCOMMAND = "convert-orbit"
 ALIASES = ["co"]
+LOGGER_NAME = "orbit_tool"
 
 
 def config_args(parser):
@@ -105,7 +103,7 @@ def execute(vm=None, args=None, config=None) -> int:
     context = DataContext.getDefault()
 
     # load a consistent earth model
-    earth = orekitfactory.get_reference_ellipsoid(
+    earth = orekitfactory.factory.get_reference_ellipsoid(
         model="wgs84", frame="itrf", iersConventions="2010", simpleEop=False
     )
 
@@ -135,7 +133,7 @@ def execute(vm=None, args=None, config=None) -> int:
     start_date, stop_date, step = utils.start_stop_step(args, config, orbit.getDate())
 
     # create the initial propagator
-    propagator = orekitfactory.to_propagator(
+    propagator = orekitfactory.factory.to_propagator(
         orbit,
         entralBody=earth,
         context=context,

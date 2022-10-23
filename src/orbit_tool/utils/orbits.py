@@ -1,8 +1,6 @@
 import astropy.units as u
-import json
 from org.orekit.orbits import (
     Orbit,
-    PositionAngle,
     KeplerianOrbit,
     CircularOrbit,
     EquinoctialOrbit,
@@ -11,7 +9,6 @@ from org.orekit.propagation.analytical.tle import TLE
 from org.hipparchus.util import MathUtils, FastMath
 
 from orekitfactory.utils import validate_quantity
-
 from .orbit_reader import OrbitType
 
 

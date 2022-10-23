@@ -1,6 +1,6 @@
 """Check astropy's GCRF -> ITRF transformations."""
 import logging
-import orekitfactory
+import orekitfactory.factory
 
 import orbit_tool.utils as utils
 
@@ -14,13 +14,17 @@ import astropy.coordinates
 import astropy.time
 import astropy.units
 
+from ..configuration import get_config
+
 SUBCOMMAND = "check-astropy"
-ALIASES = ["ca"]
+ALIASES = ["verify", "check", "va", "ca"]
+LOGGER_NAME = "orbit_tool"
 
 
-def execute(vm=None, args=None, config=None) -> int:
+def execute(args=None) -> int:
     logger = logging.getLogger(__name__)
     context = DataContext.getDefault()
+    config = get_config()
 
     df = build_data_frame(config, context)
     add_astropy_cols(df)
@@ -80,13 +84,13 @@ def add_astropy_cols(df: pandas.DataFrame):
 def build_data_frame(config: dict, context: DataContext) -> pandas.DataFrame:
 
     # load a consistent earth model
-    earth = orekitfactory.get_reference_ellipsoid(
+    earth = orekitfactory.factory.get_reference_ellipsoid(
         model="wgs84", frame="itrf", iersConventions="2010", simpleEop=False
     )
 
     orbit, type = utils.read_orbit(orbit_name="orbit3", config=config["orbits"])
 
-    propagator = orekitfactory.to_propagator(
+    propagator = orekitfactory.factory.to_propagator(
         orbit,
         centralBody=earth,
         context=context,
@@ -111,7 +115,7 @@ def build_data_frame(config: dict, context: DataContext) -> pandas.DataFrame:
     itrf_dz = []
 
     orekit_gcrf = context.getFrames().getGCRF()
-    orekit_itrf = orekitfactory.get_frame(
+    orekit_itrf = orekitfactory.factory.get_frame(
         "itrf", context=context, simpleEop=False, iersConventions="2010"
     )
 

@@ -4,9 +4,8 @@ import czml3
 import czml3.enums
 import czml3.properties
 import czml3.types
-import orekitfactory
+import orekitfactory.factory
 import datetime
-
 
 import orbit_tool.utils as utils
 
@@ -18,6 +17,7 @@ from org.orekit.time import AbsoluteDate
 
 SUBCOMMAND = "draw-orbit"
 ALIASES = ["show-orbit", "show"]
+LOGGER_NAME = "orbit_tool"
 
 
 def config_args(parser):
@@ -75,13 +75,13 @@ def generate_packet(
     context = DataContext.getDefault()
 
     # load a consistent earth model
-    earth = orekitfactory.get_reference_ellipsoid(
+    earth = orekitfactory.factory.get_reference_ellipsoid(
         model="wgs84", frame="itrf", iersConventions="2010", simpleEop=False
     )
 
     orbit, type = utils.read_orbit(orbit_name=args.orbit, config=config["orbits"])
 
-    propagator = orekitfactory.to_propagator(
+    propagator = orekitfactory.factory.to_propagator(
         orbit,
         centralBody=earth,
         context=context,

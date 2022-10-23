@@ -2,7 +2,7 @@
 from datetime import timedelta
 import argparse
 import logging
-import orekitfactory
+import orekitfactory.factory
 import astropy.units as u
 import matplotlib.pyplot as plt
 import time
@@ -13,13 +13,14 @@ from org.orekit.orbits import CartesianOrbit
 from org.orekit.propagation import Propagator
 from org.orekit.time import AbsoluteDate
 
+from ..configuration import get_config
 from ..utils import read_orbit, OrbitType, to_timedelta, start_stop_step
 
 from pandas import DataFrame
 
 
 ALIASES = ["check", "chk"]
-
+LOGGER_NAME = "orbit_tool"
 
 def config_args(parser):
     parser.add_argument(
@@ -100,12 +101,13 @@ def config_args(parser):
     )
 
 
-def execute(vm=None, args=None, config=None) -> int:
+def execute(args=None) -> int:
     """Compare propagation of a tle against a high-fidelity propagator."""
 
     logger = logging.getLogger(__name__)
     context = DataContext.getDefault()
-
+    config = get_config()
+    
     # load a consistent earth model
     earth = orekitfactory.get_reference_ellipsoid(
         model="wgs84", frame="itrf", iersConventions="2010", simpleEop=False
@@ -132,7 +134,7 @@ def execute(vm=None, args=None, config=None) -> int:
     logger.debug("Exection start time set to %s", str(start_date))
 
     # build the TLE's SGP4 propagator
-    sgp4 = orekitfactory.to_propagator(
+    sgp4 = orekitfactory.factory.to_propagator(
         tle, centralBody=earth, context=context, **config["propagator_args"]
     )
 
@@ -143,7 +145,7 @@ def execute(vm=None, args=None, config=None) -> int:
     )
 
     # build the orbit from the cartesian orbit
-    cart_prop = orekitfactory.to_propagator(
+    cart_prop = orekitfactory.factory.to_propagator(
         cart_orbit, centralBody=earth, context=context, **config["propagator_args"]
     )
 
