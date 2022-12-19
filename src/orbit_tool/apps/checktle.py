@@ -22,6 +22,7 @@ from pandas import DataFrame
 ALIASES = ["check", "chk"]
 LOGGER_NAME = "orbit_tool"
 
+
 def config_args(parser):
     parser.add_argument(
         "--orbit",
@@ -107,7 +108,7 @@ def execute(args=None) -> int:
     logger = logging.getLogger(__name__)
     context = DataContext.getDefault()
     config = get_config()
-    
+
     # load a consistent earth model
     earth = orekitfactory.get_reference_ellipsoid(
         model="wgs84", frame="itrf", iersConventions="2010", simpleEop=False

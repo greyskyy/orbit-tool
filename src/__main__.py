@@ -20,7 +20,7 @@ if __name__ == "__main__":
             group=pyrebar.Plugins.PREINIT_GROUP,
         )
     )
-    
+
     # post-init plugins
     pyrebar.Plugins.add_entrypoint(
         EntryPoint(
@@ -31,35 +31,45 @@ if __name__ == "__main__":
     )
 
     # apps
-    pyrebar.Plugins.add_entrypoint(EntryPoint(
-        name="check-tle",
-        value="orbit_tool.apps.checktle",
-        group=pyrebar.Plugins.APP_GROUP,
-    ))
-    
-    pyrebar.Plugins.add_entrypoint(EntryPoint(
-        name="compare-orbits",
-        value="orbit_tool.apps.compare_orbits",
-        group=pyrebar.Plugins.APP_GROUP,
-    ))
-    
-    pyrebar.Plugins.add_entrypoint(EntryPoint(
-        name="convert",
-        value="orbit_tool.apps.convert",
-        group=pyrebar.Plugins.APP_GROUP,
-    ))
-    
-    pyrebar.Plugins.add_entrypoint(EntryPoint(
-        name="draw-orbit",
-        value="orbit_tool.apps.draw_orbit",
-        group=pyrebar.Plugins.APP_GROUP,
-    ))
-    
-    pyrebar.Plugins.add_entrypoint(EntryPoint(
-        name="verify-astropy",
-        value="orbit_tool.apps.verify_astropy",
-        group=pyrebar.Plugins.APP_GROUP,
-    ))
-    
+    pyrebar.Plugins.add_entrypoint(
+        EntryPoint(
+            name="check-tle",
+            value="orbit_tool.apps.checktle",
+            group=pyrebar.Plugins.APP_GROUP,
+        )
+    )
+
+    pyrebar.Plugins.add_entrypoint(
+        EntryPoint(
+            name="compare-orbits",
+            value="orbit_tool.apps.compare_orbits",
+            group=pyrebar.Plugins.APP_GROUP,
+        )
+    )
+
+    pyrebar.Plugins.add_entrypoint(
+        EntryPoint(
+            name="convert",
+            value="orbit_tool.apps.convert",
+            group=pyrebar.Plugins.APP_GROUP,
+        )
+    )
+
+    pyrebar.Plugins.add_entrypoint(
+        EntryPoint(
+            name="draw-orbit",
+            value="orbit_tool.apps.draw_orbit",
+            group=pyrebar.Plugins.APP_GROUP,
+        )
+    )
+
+    pyrebar.Plugins.add_entrypoint(
+        EntryPoint(
+            name="verify-astropy",
+            value="orbit_tool.apps.verify_astropy",
+            group=pyrebar.Plugins.APP_GROUP,
+        )
+    )
+
     rc = pyrebar.application.main()
     sys.exit(rc)

@@ -101,7 +101,7 @@ def execute(args=None) -> int:
     logger = logging.getLogger(__name__)
     context = DataContext.getDefault()
     config = get_config()
-    
+
     # load a consistent earth model
     earth = orekitfactory.factory.get_reference_ellipsoid(
         model="wgs84", frame="itrf", iersConventions="2010", simpleEop=False
