@@ -1,0 +1,20 @@
+Metadata-Version: 2.1
+Name: orbit-tool
+Version: 0.0.0
+Summary: Utility tool for orbits.
+Author: Joe Reed
+License: MIT
+Project-URL: homepage, https://github.com/greyskyy/orbit-tool
+Project-URL: repository, https://github.com/greyskyy/orbit-tool
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Console
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Scientific/Engineering
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE

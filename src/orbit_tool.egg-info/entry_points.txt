@@ -1,0 +1,17 @@
+[console_scripts]
+orbit-tool = orbit_tool.runner:run
+
+[orbittool.app]
+check-tle = orbit_tool.apps.checktle
+compare-orbits = orbit_tool.apps.compare_orbits
+convert = orbit_tool.apps.convert
+draw-orbit = orbit_tool.apps.draw_orbit
+verify-astropy = orbit_tool.apps.verify_astropy
+
+[orbittool.postinit]
+config-load = orbit_tool.configuration:load_config
+orekit = orekitfactory.hooks:post_init
+
+[orbittool.preinit]
+config-args = orbit_tool.configuration:add_args
+orekit = orekitfactory.hooks:pre_init
